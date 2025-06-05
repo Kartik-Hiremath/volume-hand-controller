@@ -11,16 +11,21 @@ pipeline {
                 git branch: 'main', url: 'https://github.com/Kartik-Hiremath/volume-hand-controller.git'
             }
         }
+    stages('SonarQube Analysis'){
+        steps{
+        withCredentials([string(credentialsId: 'Sonar', variable: 'SONAR_TOKEN')]) {
+    withSonarQubeEnv('MySonarQube') {
+        sh '''
+            export SONAR_TOKEN=$SONAR_TOKEN
+            /usr/local/bin/sonar-scanner \
+                -Dsonar.token=$SONAR_TOKEN \
+                -Dsonar.scanner.enable-jre-provisioning=false
+        '''
+    }
+}
+}
+}
 
-        stage('SonarQube Analysis') {
-            steps {
-                withCredentials([string(credentialsId: 'Sonar', variable: 'SONAR_TOKEN')]) {
-                    withSonarQubeEnv('MySonarQube') {
-                        sh '/usr/local/bin/sonar-scanner -Dsonar.login=$SONAR_TOKEN'
-                    }
-                }
-            }
-        }
 
         stage('Build Docker Image') {
             steps {
