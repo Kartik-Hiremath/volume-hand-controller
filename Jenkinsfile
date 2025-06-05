@@ -2,27 +2,26 @@ pipeline {
     agent any
 
     environment {
-        SONARQUBE_ENV = 'MySonarQube'
         DOCKER_IMAGE = 'kartikhiremath/volume-hand-controller'
     }
 
     stages {
         stage('Clone Repository') {
             steps {
-                git branch: 'main', url : 'https://github.com/Kartik-Hiremath/volume-hand-controller.git'
+                git branch: 'main', url: 'https://github.com/Kartik-Hiremath/volume-hand-controller.git'
             }
         }
-    }
-     stage('SonarQube Analysis') {
-        steps {
-        withCredentials([string(credentialsId: 'sonar', variable: 'SONAR_TOKEN')]) {
-            withSonarQubeEnv('MySonarQube') {
-                sh '/usr/local/bin/sonar-scanner -Dsonar.login=$SONAR_TOKEN'
+
+        stage('SonarQube Analysis') {
+            steps {
+                withCredentials([string(credentialsId: 'sonar', variable: 'SONAR_TOKEN')]) {
+                    withSonarQubeEnv('MySonarQube') {
+                        sh '/usr/local/bin/sonar-scanner -Dsonar.login=$SONAR_TOKEN'
+                    }
+                }
             }
         }
-        }
-    }
-   
+
         stage('Build Docker Image') {
             steps {
                 sh 'docker build -t $DOCKER_IMAGE .'
@@ -47,8 +46,4 @@ pipeline {
         }
     }
 }
-
-
-
-
 
