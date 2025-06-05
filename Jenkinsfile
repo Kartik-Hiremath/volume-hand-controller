@@ -12,7 +12,7 @@ pipeline {
             }
         }
 
-        stage('SonarQube Analysis') {
+stage('SonarQube Analysis') {
     steps {
         withCredentials([string(credentialsId: 'Sonar', variable: 'SONAR_TOKEN')]) {
             withSonarQubeEnv('MySonarQube') {
@@ -20,7 +20,7 @@ pipeline {
                     /usr/local/bin/sonar-scanner \
                         -Dsonar.token=$SONAR_TOKEN \
                         -Dsonar.scanner.enable-jre-provisioning=false \
-                        -Dsonar.scanner.javaHome=/opt/homebrew/opt/openjdk/libexec/openjdk.jdk/Contents/Home
+                        -Dsonar.scanner.javaHome=/Library/Java/JavaVirtualMachines/jdk-23.jdk/Contents/Home
                 '''
             }
         }
