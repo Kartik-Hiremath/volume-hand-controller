@@ -9,7 +9,7 @@ pipeline {
     stages {
         stage('Clone Repository') {
             steps {
-                git 'https://github.com/Kartik-Hiremath/volume-hand-controller.git'
+                git branch: 'main', url : 'https://github.com/Kartik-Hiremath/volume-hand-controller.git'
             }
         }
 
