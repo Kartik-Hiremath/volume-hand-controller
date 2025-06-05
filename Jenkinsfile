@@ -13,18 +13,20 @@ pipeline {
         }
 
         stage('SonarQube Analysis') {
-            steps {
-                withCredentials([string(credentialsId: 'Sonar', variable: 'SONAR_TOKEN')]) {
-                    withSonarQubeEnv('MySonarQube') {
-                        sh '''
-                            /usr/local/bin/sonar-scanner \
-                                -Dsonar.token=$SONAR_TOKEN \
-                                -Dsonar.scanner.enable-jre-provisioning=false
-                        '''
-                    }
-                }
+    steps {
+        withCredentials([string(credentialsId: 'Sonar', variable: 'SONAR_TOKEN')]) {
+            withSonarQubeEnv('MySonarQube') {
+                sh '''
+                    /usr/local/bin/sonar-scanner \
+                        -Dsonar.token=$SONAR_TOKEN \
+                        -Dsonar.scanner.enable-jre-provisioning=false \
+                        -Dsonar.scanner.javaHome=/opt/homebrew/opt/openjdk/libexec/openjdk.jdk/Contents/Home
+                '''
             }
         }
+    }
+}
+
 
         stage('Build Docker Image') {
             steps {
