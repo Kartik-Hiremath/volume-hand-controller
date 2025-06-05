@@ -12,19 +12,18 @@ pipeline {
             }
         }
 
-stage('SonarQube Analysis') {
-    steps {
-        withCredentials([string(credentialsId: 'Sonar', variable: 'SONAR_TOKEN')]) {
-            withSonarQubeEnv('MySonarQube') {
-                sh '''
-                    /usr/local/bin/sonar-scanner \
-                        -Dsonar.token=$SONAR_TOKEN \
-                        -Dsonar.scanner.enable-jre-provisioning=false \
-                        -Dsonar.scanner.javaHome=/Library/Java/JavaVirtualMachines/jdk-23.jdk/Contents/Home
-                '''
-            }
-        }
+        stage('SonarQube Analysis') {
+  steps {
+    withCredentials([string(credentialsId: 'Sonar', variable: 'SONAR_TOKEN')]) {
+      sh '''
+        sonar-scanner \
+          -Dsonar.projectKey=volume-hand-controller \
+          -Dsonar.sources=. \
+          -Dsonar.host.url=http://localhost:9000 \
+          -Dsonar.login=$SONAR_TOKEN
+      '''
     }
+  }
 }
 
 
